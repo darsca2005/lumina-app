@@ -180,12 +180,12 @@ function renderHome() {
     `;
   }
 
-  // Esplora per Argomento (20 Materie)
+  // Esplora per Argomento (10 Materie Fondamentali)
   const categories = state.bootstrap.categories || [];
   html += `
     <div style="margin-bottom: var(--space-4);">
       <div class="flex-between" style="margin-bottom: var(--space-2);">
-        <h3 style="font-size: 16px; font-weight: 700;">Le 20 Grandi Discipline</h3>
+        <h3 style="font-size: 16px; font-weight: 700;">Le 10 Grandi Discipline</h3>
         <button class="btn-ghost" style="font-size: 12px; font-weight: 600;" id="btn-open-all-categories">Tutti i temi →</button>
       </div>
       <div class="category-filter-scroll" style="margin-bottom: 0;">
@@ -202,7 +202,7 @@ function renderHome() {
   html += `
     <div style="margin-bottom: var(--space-4);">
       <div class="flex-between" style="margin-bottom: var(--space-2);">
-        <h3 style="font-size: 16px; font-weight: 700;">Biblioteca Senza Limiti (80 Percorsi)</h3>
+        <h3 style="font-size: 16px; font-weight: 700;">Biblioteca Completa (250 Percorsi · 25 per tema)</h3>
         <button class="btn-ghost" style="font-size: 12px; font-weight: 600;" id="btn-see-all-courses">Vedi tutti (${courses.length}) →</button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -319,8 +319,8 @@ function renderExplore() {
       <!-- Stats Banner -->
       <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;">
         <span class="badge badge-success">📚 ${courses.length} Percorsi</span>
-        <span class="badge badge-warning">🌐 ${categories.length} Materie</span>
-        <span class="badge" style="background:#e0e7ff; color:#3730a3;">💡 160+ Quiz Didattici</span>
+        <span class="badge badge-warning">🌐 10 Discipline (25 per tema)</span>
+        <span class="badge" style="background:#e0e7ff; color:#3730a3;">💡 500+ Domande Quiz</span>
         <span class="badge" style="background:#fce7f3; color:#9d174d;">🎧 Audio Incluso</span>
       </div>
 

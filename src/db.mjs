@@ -20,11 +20,8 @@ export function initDb() {
 }
 
 function seedInitialData() {
-  const count = db.prepare('SELECT count(*) as count FROM categories').get().count;
-  if (count > 0) return;
-
   const insertCategory = db.prepare(`
-    INSERT INTO categories (id, slug, name, description, icon_name, accent_color, sort_order)
+    INSERT OR REPLACE INTO categories (id, slug, name, description, icon_name, accent_color, sort_order)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
 
@@ -136,7 +133,7 @@ function seedInitialData() {
 
   // Seed Lessons
   const insertLesson = db.prepare(`
-    INSERT INTO lessons (
+    INSERT OR REPLACE INTO lessons (
       id, course_id, category_id, slug, title, hook_subtitle,
       reading_time_minutes, content_blocks, key_takeaways, audio_duration_seconds,
       order_in_course, is_daily_featured
@@ -253,7 +250,7 @@ function seedInitialData() {
 
   // Seed Quiz Questions
   const insertQuestion = db.prepare(`
-    INSERT INTO quiz_questions (
+    INSERT OR REPLACE INTO quiz_questions (
       id, lesson_id, question_text, options, correct_option_index, explanation_text, sort_order
     ) VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
@@ -345,7 +342,7 @@ function insertProgressAndActivity() {
 
   const today = new Date().toISOString().slice(0, 10);
   db.prepare(`
-    INSERT INTO user_lesson_progress (
+    INSERT OR REPLACE INTO user_lesson_progress (
       id, user_id, lesson_id, status, reading_progress_pct, quiz_score, quiz_total, personal_note, completed_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
@@ -355,7 +352,7 @@ function insertProgressAndActivity() {
   );
 
   db.prepare(`
-    INSERT INTO daily_activity_logs (
+    INSERT OR REPLACE INTO daily_activity_logs (
       id, user_id, activity_date, lessons_completed_count, minutes_studied, goal_met, focus_unlocked_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?)
   `).run(
@@ -370,9 +367,12 @@ function insertProgressAndActivity() {
 }
 
 export function seedExpandedCatalog() {
-  // 1. Categories
+  const validCatIds = allCategories.map(c => c.id);
+  const placeholdersCats = validCatIds.map(() => '?').join(',');
+  db.prepare(`DELETE FROM categories WHERE id NOT IN (${placeholdersCats})`).run(...validCatIds);
+
   const insertCategory = db.prepare(`
-    INSERT OR IGNORE INTO categories (id, slug, name, description, icon_name, accent_color, sort_order)
+    INSERT OR REPLACE INTO categories (id, slug, name, description, icon_name, accent_color, sort_order)
     VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
 
@@ -383,8 +383,12 @@ export function seedExpandedCatalog() {
   }
 
   // 2. Courses
+  const validCourseIds = allCourses.map(c => c.id);
+  const placeholdersCourses = validCourseIds.map(() => '?').join(',');
+  db.prepare(`DELETE FROM courses WHERE id NOT IN (${placeholdersCourses})`).run(...validCourseIds);
+
   const insertCourse = db.prepare(`
-    INSERT OR IGNORE INTO courses (
+    INSERT OR REPLACE INTO courses (
       id, category_id, slug, title, subtitle, synopsis,
       difficulty_level, estimated_total_minutes, lessons_count, cover_badge, sort_order
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -401,7 +405,7 @@ export function seedExpandedCatalog() {
 
   // 3. Curated Lessons
   const insertLesson = db.prepare(`
-    INSERT OR IGNORE INTO lessons (
+    INSERT OR REPLACE INTO lessons (
       id, course_id, category_id, slug, title, hook_subtitle,
       reading_time_minutes, content_blocks, key_takeaways, audio_duration_seconds,
       order_in_course, is_daily_featured
@@ -409,7 +413,7 @@ export function seedExpandedCatalog() {
   `);
 
   const insertQuestion = db.prepare(`
-    INSERT OR IGNORE INTO quiz_questions (
+    INSERT OR REPLACE INTO quiz_questions (
       id, lesson_id, question_text, options, correct_option_index, explanation_text, sort_order
     ) VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
