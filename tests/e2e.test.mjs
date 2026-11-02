@@ -27,7 +27,7 @@ describe('Lumina E2E Test Suite (Flows F01-F06 & Core Loop)', () => {
     assert.strictEqual(data.dailyLesson.is_daily_featured, 1);
     assert.ok(Array.isArray(data.courses), 'Courses array must exist');
     assert.ok(Array.isArray(data.friendsLeaderboard), 'Friends leaderboard must exist');
-    assert.ok(data.friendsLeaderboard.length >= 3, 'Leaderboard has friends demo profiles');
+    assert.ok(data.friendsLeaderboard.length >= 2, 'Leaderboard has friends profiles');
   });
 
   test('F01: Onboarding saves user preferences, daily goal, and interests', async () => {

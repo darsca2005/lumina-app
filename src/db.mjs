@@ -40,9 +40,12 @@ function seedInitialData() {
     insertCategory.run(...c);
   }
 
-  // Seed default primary user (Lumina Owner) & friend demo profiles
+  // Pulisce vecchi utenti demo (Marco, Elena, Luca) mantenendo solo Dario (io) e Fede
+  db.prepare(`DELETE FROM users WHERE id IN ('usr-friend-marco', 'usr-friend-elena', 'usr-friend-luca')`).run();
+
+  // Seed default primary user (Dario) & Fede
   const insertUser = db.prepare(`
-    INSERT OR IGNORE INTO users (
+    INSERT OR REPLACE INTO users (
       id, email, display_name, avatar_emoji, auth_provider, age_range,
       daily_goal_minutes, preferred_locale, current_streak, longest_streak,
       last_streak_date, notification_time, focus_lock_enabled, onboarding_completed, friend_code
@@ -51,20 +54,12 @@ function seedInitialData() {
 
   const today = new Date().toISOString().slice(0, 10);
   insertUser.run(
-    'usr-me', 'me@lumina.local', 'Tu (Mente Curiosa)', '🦉', 'local', '25-34',
-    10, 'it', 3, 5, today, '08:30', 0, 1, 'LUMINA-ME'
+    'usr-me', 'dario@lumina.local', 'Dario (Io)', '🦉', 'local', '25-34',
+    10, 'it', 3, 5, today, '08:30', 0, 1, 'LUMINA-DARIO'
   );
   insertUser.run(
-    'usr-friend-marco', 'marco@amici.local', 'Marco', '🚀', 'local', '25-34',
-    10, 'it', 4, 7, today, '09:00', 0, 1, 'LUMINA-MARCO'
-  );
-  insertUser.run(
-    'usr-friend-elena', 'elena@amici.local', 'Elena', '✨', 'local', '18-24',
-    15, 'it', 2, 8, today, '08:00', 1, 1, 'LUMINA-ELENA'
-  );
-  insertUser.run(
-    'usr-friend-luca', 'luca@amici.local', 'Luca', '🌿', 'local', '25-34',
-    5, 'it', 1, 3, today, '20:30', 0, 1, 'LUMINA-LUCA'
+    'usr-fede', 'fede@lumina.local', 'Fede', '🚀', 'local', '25-34',
+    10, 'it', 1, 3, today, '09:00', 0, 1, 'LUMINA-FEDE'
   );
 
   // Seed user interests
