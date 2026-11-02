@@ -2,7 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { extraCourses, extraLessons } from './catalog-data.mjs';
+import { allCategories, allCourses, curatedLessons } from './catalog-data.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DB_PATH = process.env.DB_PATH || join(__dirname, '../data/lumina.db');
@@ -370,6 +370,19 @@ function insertProgressAndActivity() {
 }
 
 export function seedExpandedCatalog() {
+  // 1. Categories
+  const insertCategory = db.prepare(`
+    INSERT OR IGNORE INTO categories (id, slug, name, description, icon_name, accent_color, sort_order)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  if (Array.isArray(allCategories)) {
+    for (const cat of allCategories) {
+      insertCategory.run(cat.id, cat.slug, cat.name, cat.description, cat.icon_name, cat.accent_color, cat.sort_order);
+    }
+  }
+
+  // 2. Courses
   const insertCourse = db.prepare(`
     INSERT OR IGNORE INTO courses (
       id, category_id, slug, title, subtitle, synopsis,
@@ -377,13 +390,16 @@ export function seedExpandedCatalog() {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
-  for (const c of extraCourses) {
-    insertCourse.run(
-      c.id, c.category_id, c.slug, c.title, c.subtitle, c.synopsis,
-      c.difficulty_level, c.estimated_total_minutes, c.lessons_count, c.cover_badge, c.sort_order
-    );
+  if (Array.isArray(allCourses)) {
+    for (const c of allCourses) {
+      insertCourse.run(
+        c.id, c.category_id, c.slug, c.title, c.subtitle, c.synopsis,
+        c.difficulty_level, c.estimated_total_minutes, c.lessons_count, c.cover_badge, c.sort_order
+      );
+    }
   }
 
+  // 3. Curated Lessons
   const insertLesson = db.prepare(`
     INSERT OR IGNORE INTO lessons (
       id, course_id, category_id, slug, title, hook_subtitle,
@@ -398,21 +414,91 @@ export function seedExpandedCatalog() {
     ) VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
 
-  for (const l of extraLessons) {
-    insertLesson.run(
-      l.id, l.course_id, l.category_id, l.slug, l.title, l.hook_subtitle,
-      l.reading_time_minutes, JSON.stringify(l.content_blocks),
-      JSON.stringify(l.key_takeaways), l.audio_duration_seconds,
-      l.order_in_course, l.is_daily_featured || 0
-    );
+  if (Array.isArray(curatedLessons)) {
+    for (const l of curatedLessons) {
+      insertLesson.run(
+        l.id, l.course_id, l.category_id, l.slug, l.title, l.hook_subtitle,
+        l.reading_time_minutes, JSON.stringify(l.content_blocks),
+        JSON.stringify(l.key_takeaways), l.audio_duration_seconds,
+        l.order_in_course, l.is_daily_featured || 0
+      );
 
-    if (Array.isArray(l.questions)) {
-      l.questions.forEach((q, idx) => {
-        insertQuestion.run(
-          q.id, l.id, q.question_text, JSON.stringify(q.options),
-          q.correct_option_index, q.explanation_text, idx + 1
+      if (Array.isArray(l.questions)) {
+        l.questions.forEach((q, idx) => {
+          insertQuestion.run(
+            q.id, l.id, q.question_text, JSON.stringify(q.options),
+            q.correct_option_index, q.explanation_text, idx + 1
+          );
+        });
+      }
+    }
+  }
+
+  // 4. Ensure every course has at least one complete playable lesson with slides and quiz
+  if (Array.isArray(allCourses)) {
+    for (const c of allCourses) {
+      const existing = db.prepare('SELECT count(*) as count FROM lessons WHERE course_id = ?').get(c.id).count;
+      if (existing === 0) {
+        const lessonId = 'lsn-' + c.id.replace('crs-', '') + '-1';
+        const blocks = [
+          {
+            type: 'slide',
+            title: c.title,
+            text: `${c.synopsis} Approfondire questo tema significa esplorare i nodi cruciali del pensiero, della storia e della creatività umana. ${c.subtitle}. Conoscere queste dinamiche ci permette di andare oltre le opinioni superficiali per cogliere la struttura profonda della realtà.`,
+            quote: `La conoscenza autentica non consiste nell'accumulare nozioni, ma nel coltivare uno sguardo lucido e curioso sul mondo.`,
+            takeaway: `I grandi snodi culturali e scientifici sono scelte umane coraggiose che continuano a orientare il nostro presente.`
+          },
+          {
+            type: 'slide',
+            title: 'La Prospettiva Contemporanea',
+            text: `Perché questo tema parla ancora a noi oggi? ${c.subtitle.toLowerCase()} non è un semplice reperto del passato o un esercizio astratto, ma uno strumento vivo per interpretare le trasformazioni del nostro tempo. Allenare la mente su questi concetti forgia la nostra capacità di giudizio e la nostra indipendenza intellettuale.`,
+            quote: `Imparare qualcosa di nuovo ogni giorno è la più grande forma di libertà quotidiana.`,
+            takeaway: `Custodisci i punti chiave di questa lettura e verifica la tua comprensione con il quiz di richiamo attivo.`
+          }
+        ];
+
+        const takeaways = [
+          `Comprendere il contesto e i principi essenziali di ${c.title}.`,
+          `Riconoscere l'eredità viva di questo argomento nella società e nella cultura contemporanea.`,
+          `Sviluppare un punto di vista autonomo e consapevole attraverso il richiamo attivo.`
+        ];
+
+        insertLesson.run(
+          lessonId, c.id, c.category_id, c.slug + '-fondamenti',
+          c.title, c.subtitle,
+          7, JSON.stringify(blocks), JSON.stringify(takeaways), 420, 1, 0
         );
-      });
+
+        insertQuestion.run(
+          'q-' + lessonId + '-1',
+          lessonId,
+          `Qual è il significato centrale esplorato nel percorso "${c.title}"?`,
+          JSON.stringify([
+            'Che la realtà si riduce a poche nozioni statiche',
+            `Che comprendere ${c.subtitle.toLowerCase()} allena il pensiero critico e la consapevolezza`,
+            'Che le grandi idee del passato non hanno legami con l\'oggi',
+            'Che solo gli specialisti possono comprendere questo argomento'
+          ]),
+          1,
+          `La lezione sottolinea che approfondire ${c.title} stimola il pensiero critico e arricchisce la nostra visione del mondo.`,
+          1
+        );
+
+        insertQuestion.run(
+          'q-' + lessonId + '-2',
+          lessonId,
+          `Quale atteggiamento intellettuale promuove questa lettura?`,
+          JSON.stringify([
+            'L\'accettazione passiva dei pregiudizi comuni',
+            'La curiosità attiva e la verifica autonoma delle idee',
+            'L\'indifferenza verso la storia e la scienza',
+            'La rinuncia a porsi nuove domande'
+          ]),
+          1,
+          `La curiosità e il dubbio metodico sono la base su cui si fonda ogni vero percorso di crescita culturale.`,
+          2
+        );
+      }
     }
   }
 }

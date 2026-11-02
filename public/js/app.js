@@ -11,6 +11,7 @@ const state = {
   readerTheme: localStorage.getItem('lumina_theme') || 'paper',
   readerFontSize: localStorage.getItem('lumina_font_size') || 'md',
   activeCategoryFilter: 'all',
+  searchQuery: '',
   quiz: {
     lessonId: null,
     questions: [],
@@ -167,24 +168,42 @@ function renderHome() {
     `;
   }
 
-  // Corsi e Percorsi Consigliati
+  // Esplora per Argomento (20 Materie)
+  const categories = state.bootstrap.categories || [];
   html += `
     <div style="margin-bottom: var(--space-4);">
       <div class="flex-between" style="margin-bottom: var(--space-2);">
-        <h3 style="font-size: 16px; font-weight: 700;">Continua a Esplorare</h3>
-        <button class="btn-ghost" style="font-size: 12px; font-weight: 600;" id="btn-see-all-courses">Vedi tutti →</button>
+        <h3 style="font-size: 16px; font-weight: 700;">Le 20 Grandi Discipline</h3>
+        <button class="btn-ghost" style="font-size: 12px; font-weight: 600;" id="btn-open-all-categories">Tutti i temi →</button>
+      </div>
+      <div class="category-filter-scroll" style="margin-bottom: 0;">
+        ${categories.map(c => `
+          <button class="cat-pill" data-home-cat="${c.id}" style="border-color: ${c.accent_color};">
+            ${c.icon_name} ${c.name}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  // Corsi e Percorsi Consigliati (Grande catalogo)
+  html += `
+    <div style="margin-bottom: var(--space-4);">
+      <div class="flex-between" style="margin-bottom: var(--space-2);">
+        <h3 style="font-size: 16px; font-weight: 700;">Biblioteca Senza Limiti (80 Percorsi)</h3>
+        <button class="btn-ghost" style="font-size: 12px; font-weight: 600;" id="btn-see-all-courses">Vedi tutti (${courses.length}) →</button>
       </div>
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        ${courses.slice(0, 3).map(c => `
+        ${courses.slice(0, 5).map(c => `
           <div class="card" style="padding: 12px 16px; margin-bottom: 0; cursor: pointer;" data-course-id="${c.id}">
             <div class="flex-between">
               <div>
-                <span style="font-size: 11px; font-weight: 700; color: var(--color-accent);">${c.category_icon} ${c.category_name}</span>
+                <span style="font-size: 11px; font-weight: 700; color: var(--color-accent);">${c.cover_badge || '📚'} ${c.category_name}</span>
                 <div style="font-family: var(--font-serif); font-size: 15px; font-weight: 700;">${c.title}</div>
-                <div style="font-size: 12px; color: var(--color-text-muted);">${c.completedLessonsCount} di ${c.lessons_count} lezioni completate</div>
+                <div style="font-size: 12px; color: var(--color-text-muted);">${c.subtitle || c.synopsis}</div>
               </div>
-              <div style="text-align: right;">
-                <span class="badge ${c.progressPct === 100 ? 'badge-success' : 'badge-warning'}">${c.progressPct}%</span>
+              <div style="text-align: right; min-width: 60px;">
+                <span class="badge ${c.progressPct === 100 ? 'badge-success' : 'badge-warning'}">${c.estimated_total_minutes || 10}m</span>
               </div>
             </div>
           </div>
@@ -239,6 +258,18 @@ function renderHome() {
   document.getElementById('btn-see-all-courses').onclick = () => navigate('explore');
   document.getElementById('btn-manage-friends').onclick = () => navigate('profile');
 
+  const btnOpenCats = document.getElementById('btn-open-all-categories');
+  if (btnOpenCats) {
+    btnOpenCats.onclick = () => navigate('explore');
+  }
+
+  document.querySelectorAll('[data-home-cat]').forEach(el => {
+    el.onclick = () => {
+      state.activeCategoryFilter = el.dataset.homeCat;
+      navigate('explore');
+    };
+  });
+
   document.querySelectorAll('[data-course-id]').forEach(el => {
     el.onclick = () => navigate('course', el.dataset.courseId);
   });
@@ -252,43 +283,84 @@ function renderExplore() {
   const { categories, courses } = state.bootstrap;
 
   let filteredCourses = courses;
+
   if (state.activeCategoryFilter !== 'all') {
-    filteredCourses = courses.filter(c => c.category_id === state.activeCategoryFilter);
+    filteredCourses = filteredCourses.filter(c => c.category_id === state.activeCategoryFilter);
+  }
+
+  if (state.searchQuery && state.searchQuery.trim()) {
+    const q = state.searchQuery.trim().toLowerCase();
+    filteredCourses = filteredCourses.filter(c => {
+      return (
+        (c.title && c.title.toLowerCase().includes(q)) ||
+        (c.subtitle && c.subtitle.toLowerCase().includes(q)) ||
+        (c.synopsis && c.synopsis.toLowerCase().includes(q)) ||
+        (c.category_name && c.category_name.toLowerCase().includes(q))
+      );
+    });
   }
 
   let html = `
     <div style="margin-bottom: var(--space-4);">
-      <h2 style="font-family: var(--font-serif); font-size: 24px; font-weight: 700; margin-bottom: 8px;">Esplora la Biblioteca</h2>
-      <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 14px;">
-        Tutti i percorsi sono aperti e gratuiti. Scegli un tema e inizia il tuo viaggio.
-      </p>
-
-      <!-- Category Filter Pills -->
-      <div class="category-filter-scroll">
-        <button class="cat-pill ${state.activeCategoryFilter === 'all' ? 'active' : ''}" data-cat-id="all">Tutte le materie</button>
-        ${categories.map(c => `
-          <button class="cat-pill ${state.activeCategoryFilter === c.id ? 'active' : ''}" data-cat-id="${c.id}">
-            ${c.icon_name} ${c.name}
-          </button>
-        `).join('')}
+      <h2 style="font-family: var(--font-serif); font-size: 24px; font-weight: 700; margin-bottom: 6px;">Biblioteca Infinita</h2>
+      
+      <!-- Stats Banner -->
+      <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;">
+        <span class="badge badge-success">📚 ${courses.length} Percorsi</span>
+        <span class="badge badge-warning">🌐 ${categories.length} Materie</span>
+        <span class="badge" style="background:#e0e7ff; color:#3730a3;">💡 160+ Quiz Didattici</span>
+        <span class="badge" style="background:#fce7f3; color:#9d174d;">🎧 Audio Incluso</span>
       </div>
+
+      <!-- Live Search Bar -->
+      <div style="position: relative; margin-bottom: 12px;">
+        <input type="text" id="explore-search-input" placeholder="🔍 Cerca tra ${courses.length} percorsi (es. Socrate, Microchip, Buchi Neri, Monet, AI...)" value="${state.searchQuery}" style="width: 100%; padding: 10px 14px; border: 1.5px solid var(--color-border); border-radius: var(--radius-md); font-size: 13px; font-family: var(--font-sans); background: var(--color-surface); color: var(--color-text);">
+      </div>
+
+      <!-- Category Filter Pills (Tutte le 20 materie) -->
+      <div class="category-filter-scroll">
+        <button class="cat-pill ${state.activeCategoryFilter === 'all' ? 'active' : ''}" data-cat-id="all">Tutte le materie (${courses.length})</button>
+        ${categories.map(c => {
+          const count = courses.filter(crs => crs.category_id === c.id).length;
+          return `
+            <button class="cat-pill ${state.activeCategoryFilter === c.id ? 'active' : ''}" data-cat-id="${c.id}">
+              ${c.icon_name} ${c.name} (${count})
+            </button>
+          `;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- Active Filter Summary -->
+    <div class="flex-between" style="font-size: 12px; color: var(--color-text-muted); margin-bottom: 12px;">
+      <span>Trovati <strong>${filteredCourses.length}</strong> percorsi</span>
+      ${state.activeCategoryFilter !== 'all' || state.searchQuery ? `
+        <button class="btn-ghost" style="font-size: 11px; text-decoration: underline;" id="btn-clear-filters">Azzera filtri</button>
+      ` : ''}
     </div>
 
     <!-- Courses List -->
     <div style="display: flex; flex-direction: column; gap: var(--space-3);">
-      ${filteredCourses.map(c => `
+      ${filteredCourses.length === 0 ? `
+        <div style="text-align: center; padding: 40px 16px;">
+          <div style="font-size: 36px; margin-bottom: 8px;">🔍</div>
+          <div style="font-weight: 700; margin-bottom: 4px;">Nessun percorso trovato per "${state.searchQuery}"</div>
+          <div style="font-size: 13px; color: var(--color-text-muted);">Prova con un'altra parola chiave o esplora per materia.</div>
+        </div>
+      ` : filteredCourses.map(c => `
         <div class="card" style="cursor: pointer;" data-course-id="${c.id}">
           <div class="card-tag">
-            <span>${c.cover_badge}</span>
-            <span>${c.category_name} · ${c.estimated_total_minutes} min totali</span>
+            <span>${c.cover_badge || '📚'}</span>
+            <span>${c.category_name} · ${c.estimated_total_minutes || 10} min</span>
+            <span style="margin-left: auto; text-transform: capitalize; font-size: 10px; opacity: 0.8;">${c.difficulty_level || 'base'}</span>
           </div>
-          <h3 style="font-family: var(--font-serif); font-size: 18px; font-weight: 700; margin-bottom: 6px;">${c.title}</h3>
-          <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 12px; line-height: 1.45;">${c.synopsis}</p>
+          <h3 style="font-family: var(--font-serif); font-size: 17px; font-weight: 700; margin-bottom: 4px;">${c.title}</h3>
+          <p style="font-size: 13px; color: var(--color-text-muted); margin-bottom: 10px; line-height: 1.45;">${c.subtitle || c.synopsis}</p>
           <div class="flex-between">
             <span style="font-size: 12px; font-weight: 600; color: var(--color-accent);">
-              📚 ${c.lessons_count} lezioni brevi
+              📚 ${c.lessons_count || 1} capitolo · 🎯 Quiz
             </span>
-            <button class="btn btn-sm btn-outline">Apri Percorso →</button>
+            <button class="btn btn-sm btn-outline">Inizia →</button>
           </div>
         </div>
       `).join('')}
@@ -296,6 +368,28 @@ function renderExplore() {
   `;
 
   viewContainer.innerHTML = html;
+
+  const searchInput = document.getElementById('explore-search-input');
+  if (searchInput) {
+    searchInput.oninput = (e) => {
+      state.searchQuery = e.target.value;
+      renderExplore();
+      const nextInput = document.getElementById('explore-search-input');
+      if (nextInput) {
+        nextInput.focus();
+        nextInput.setSelectionRange(nextInput.value.length, nextInput.value.length);
+      }
+    };
+  }
+
+  const clearBtn = document.getElementById('btn-clear-filters');
+  if (clearBtn) {
+    clearBtn.onclick = () => {
+      state.searchQuery = '';
+      state.activeCategoryFilter = 'all';
+      renderExplore();
+    };
+  }
 
   document.querySelectorAll('.cat-pill').forEach(btn => {
     btn.onclick = () => {
