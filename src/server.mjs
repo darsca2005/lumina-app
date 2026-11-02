@@ -60,6 +60,7 @@ function getUserId(req, parsedUrl) {
 }
 
 export const server = createServer(async (req, res) => {
+  console.log(`[${new Date().toLocaleTimeString('it-IT')}] ${req.method} ${req.url}`);
   if (req.method === 'OPTIONS') {
     res.writeHead(204, {
       'Access-Control-Allow-Origin': '*',

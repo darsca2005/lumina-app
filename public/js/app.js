@@ -58,8 +58,20 @@ async function loadBootstrap() {
     if (state.bootstrap.user && !state.bootstrap.user.onboarding_completed) {
       showOnboardingModal();
     }
+    return true;
   } catch (err) {
     console.error('Errore nel bootstrap:', err);
+    viewContainer.innerHTML = `
+      <div style="text-align: center; padding: 48px 16px;">
+        <span style="font-size: 32px;">⚡</span>
+        <h3 style="margin-top: 12px; font-size: 18px;">Connessione a Lumina</h3>
+        <p style="font-size: 13px; color: var(--color-text-muted); margin: 8px 0 16px;">
+          ${err.message || 'Caricamento dei percorsi in corso...'}
+        </p>
+        <button class="btn btn-primary btn-sm" onclick="location.reload()">Ricarica Pagina</button>
+      </div>
+    `;
+    return false;
   }
 }
 
@@ -1334,6 +1346,6 @@ if ('serviceWorker' in navigator) {
 }
 
 // BOOTSTRAP INITIALIZATION
-loadBootstrap().then(() => {
-  navigate('home');
+loadBootstrap().then(ok => {
+  if (ok) navigate('home');
 });
