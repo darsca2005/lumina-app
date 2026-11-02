@@ -1,0 +1,18 @@
+{
+  "brand_name": "Lumina",
+  "tagline": "Dieci minuti di cultura al giorno, insieme ai tuoi amici.",
+  "avoid": [
+    "Sophia",
+    "Vik Studios",
+    "Vik Studios SAS"
+  ],
+  "domains": [
+    "sophia-culture.com",
+    "vikstudios.com",
+    "vikstudios.fr"
+  ],
+  "colors": [
+    "#006bff",
+    "#4f46e5"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "avoid": ["Sophia", "Vik Studios", "Vik Studios SAS"],
+  "app_store": {
+    "name": "Lumina: Cultura Quotidiana",
+    "subtitle": "10 minuti per la mente",
+    "promotional_text": "Dieci minuti di cultura al giorno insieme ai tuoi amici. Micro-lezioni con quiz e audio, 100% aperta e gratuita.",
+    "description": "Lumina trasforma i ritagli di tempo in momenti di vera scoperta intellettuale.\n\nOgni giorno ti aspetta una micro-lezione da 5 a 10 minuti su storia, filosofia, scienza, geopolitica, letteratura ed economia, accompagnata da un quiz interattivo di richiamo attivo per consolidare la memoria.\n\nCosa troverai in Lumina:\n- Biblioteca aperta di lezioni brevi scritte con cura editoriale\n- Modalità audio narrata per ascoltare i capitoli anche in movimento\n- Quiz di verifica immediata con spiegazioni approfondite\n- Monitoraggio della serie quotidiana e statistiche per materia\n- Cerchia amici per condividere i progressi e imparare insieme\n- Patto di concentrazione per mettere in pausa le distrazioni digitali\n\nNessun costo, nessun paywall: Lumina e' completamente gratuita per te e la tua cerchia di amici.",
+    "keywords": "storia,filosofia,scienza,geopolitica,quiz,libri,studio,amici,sapere,lettura,podcast,memoria",
+    "whats_new": "Benvenuto in Lumina! Nuova modalita' audio e classifica amici integrata."
+  },
+  "google_play": {
+    "title": "Lumina: Cultura Quotidiana",
+    "short_description": "Dieci minuti di cultura al giorno con micro-lezioni, audio e quiz tra amici.",
+    "full_description": "Lumina trasforma i ritagli di tempo in momenti di vera scoperta intellettuale.\n\nOgni giorno ti aspetta una micro-lezione da 5 a 10 minuti su storia, filosofia, scienza, geopolitica, letteratura ed economia, accompagnata da un quiz interattivo di richiamo attivo per consolidare la memoria.\n\nCosa troverai in Lumina:\n- Biblioteca aperta di lezioni brevi scritte con cura editoriale\n- Modalità audio narrata per ascoltare i capitoli anche in movimento\n- Quiz di verifica immediata con spiegazioni approfondite\n- Monitoraggio della serie quotidiana e statistiche per materia\n- Cerchia amici per condividere i progressi e imparare insieme\n- Patto di concentrazione per mettere in pausa le distrazioni digitali\n\nNessun costo, nessun paywall: Lumina e' completamente gratuita per te e la tua cerchia di amici."
+  }
+}

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: lumina-cultura
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_VERSION
+        value: 22.13.0

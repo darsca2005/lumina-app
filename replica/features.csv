@@ -1,0 +1,29 @@
+feature,area,priority,original,clone,notes
+Onboarding quiz to select favorite subjects (History Philosophy Science Geopolitics Literature Economics),onboarding,must,yes,yes,Personalizes the daily feed and initial course recommendations
+Daily study time goal selection (5 10 or 15 min per day),onboarding,must,yes,yes,Sets the daily target threshold for streaks
+Guest-first start with local progress storage before sign-in,account & sync,must,yes,yes,Allows immediate onboarding and first lesson without mandatory login wall
+Today dashboard with Lesson of the Day and weekly streak bar,daily loop,must,yes,yes,Main S05 screen driving the daily habit
+Distraction-free micro-lesson reader with progress bar and structured cards/sections,reader,must,yes,yes,Core 5-10 min reading experience (S08) with clean typography and key takeaways
+End-of-lesson interactive multiple-choice quiz (3-5 questions),quiz,must,yes,yes,Tests comprehension right after reading (S10)
+Immediate answer feedback with educational explanation on each quiz question,quiz,must,yes,yes,Reinforces active recall on both right and wrong answers
+Lesson completion celebration screen with score and daily streak increment,gamification,must,yes,yes,S11 reward screen after finishing the quiz
+Subject catalog and course explorer with category filtering and search,catalog,must,yes,yes,S06 and S07 to browse all general knowledge topics and thematic paths
+Course detail view with ordered modules progress percentage and resume CTA,catalog,must,yes,yes,Shows chapter progression inside a thematic course
+Progress and statistics page with current/best streak activity calendar and subject breakdown,gamification,must,yes,yes,S13 dashboard showing knowledge growth across disciplines
+Bookmark and save favorite lessons or courses for quick access,catalog,must,yes,yes,S14 favorites list documented in app features and privacy policy
+Audio mode (podcast-style narrator player with play/pause seek and playback speed),audio,should,yes,yes,S09 audio player synchronized with lesson content
+Cloud backup and cross-device sync for user and friends (Supabase Auth),account & sync,should,yes,yes,Links local progress to a permanent user profile
+Daily active recall review session from previously completed lessons,quiz,should,yes,yes,S12 spaced-repetition quiz mixing past questions
+Focus Lock mode (commitment blocker until daily lesson and quiz are completed),focus blocker,should,yes,yes,Focus commitment gate until daily course is completed
+Reader customization (font size adjustment and light/sepia/dark theme),reader,should,yes,yes,Improves reading comfort for 10-minute sessions
+Daily study reminder notifications with configurable time,gamification,should,yes,yes,Keeps daily streak alive
+Streak freeze or recovery grace mechanism,gamification,should,yes,yes,Reduces frustration when a user or friend misses a single day
+Multi-language interface and content support (IT primary),catalog,could,yes,yes,Italian primary language with extensible locale support
+Shareable lesson takeaway card or streak milestone badge for friends,gamification,could,yes,yes,Easy sharing with friends on WhatsApp/Telegram/Instagram
+Offline caching of daily lesson and bookmarked lessons (PWA),reader,could,yes,yes,Allows reading on commute without connectivity
+Audio mini-player persistent bar while browsing the lesson text,audio,could,yes,yes,Lets user follow text while listening
+Account reset and data export controls,account & sync,could,yes,yes,Profile management in S15
+Freemium gating and subscription paywall (RevenueCat / In-App Purchases),monetization,must,yes,skip,User decision: app is 100% free and unlocked for personal use and friends
+Original proprietary lesson texts and voiceover recordings from Vik Studios,catalog,must,yes,skip,Copyrighted editorial content; we write 100% original lessons and generate our own audio
+Sophia brand name logo and App Store promotional artwork,branding,must,yes,skip,Trademarked identity; replaced by our own brand in replica-brand
+Native iOS Apple FamilyControls system-wide third-party app blocking in a pure Web build,focus blocker,could,yes,skip,Requires paid Apple entitlement; replaced by Focus Commitment Mode on web/PWA

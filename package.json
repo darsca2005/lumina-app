@@ -1,0 +1,15 @@
+{
+  "name": "lumina-cultura-quotidiana",
+  "version": "1.0.0",
+  "description": "Lumina: micro-apprendimento quotidiano di cultura generale, 100% gratuito per te e la tua cerchia di amici.",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node src/server.mjs",
+    "build": "node src/build-check.mjs",
+    "test": "node --test tests/e2e.test.mjs"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

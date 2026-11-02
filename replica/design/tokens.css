@@ -1,0 +1,78 @@
+/* Design Tokens CSS generati da replica/design/tokens.json per Lumina */
+:root {
+  --color-bg: #fcfaf6;
+  --color-surface: #f3efe6;
+  --color-border: #dfd8c8;
+  --color-border-input: #787165;
+  --color-text: #1b1917;
+  --color-text-muted: #57534e;
+  --color-accent: #0f5c4c;
+  --color-accent-soft: #e0f0ec;
+  --color-on-accent: #ffffff;
+  --color-danger: #b91c1c;
+  --color-danger-soft: #fee2e2;
+  --color-success: #15803d;
+  --color-success-soft: #dcfce7;
+  --color-warning: #b45309;
+  --color-warning-soft: #fef3c7;
+
+  --font-serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Source Serif 4', serif;
+  --font-sans: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --text-xs: 12px;
+  --line-xs: 16px;
+  --text-sm: 14px;
+  --line-sm: 20px;
+  --text-base: 16px;
+  --line-base: 25px;
+  --text-lg: 20px;
+  --line-lg: 28px;
+  --text-xl: 28px;
+  --line-xl: 34px;
+  --text-display: 38px;
+  --line-display: 44px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 3px rgba(27,25,23,.06), 0 2px 6px rgba(27,25,23,.05);
+  --shadow-pop: 0 14px 34px rgba(27,25,23,.14);
+
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-ease: cubic-bezier(.2,.8,.2,1);
+}
+
+/* Temi del lettore micro-learning (S08) */
+[data-reader-theme="paper"] {
+  --reader-bg: #fcfaf6;
+  --reader-surface: #f3efe6;
+  --reader-text: #1b1917;
+  --reader-muted: #57534e;
+}
+
+[data-reader-theme="sepia"] {
+  --reader-bg: #f4ecd8;
+  --reader-surface: #e8dec5;
+  --reader-text: #2b2318;
+  --reader-muted: #5c4e3c;
+}
+
+[data-reader-theme="night"] {
+  --reader-bg: #14171a;
+  --reader-surface: #1e2328;
+  --reader-text: #f1efe9;
+  --reader-muted: #a6a29a;
+}

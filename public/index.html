@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lumina : Cultura Quotidiana</title>
+  <meta name="description" content="Dieci minuti di cultura al giorno, insieme ai tuoi amici. 100% gratuita.">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f5c4c">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="app-container">
+    <!-- TOP HEADER -->
+    <header class="app-header">
+      <div class="brand-title" id="btn-brand-home">
+        <img src="/icon.svg" alt="Lumina Icon" class="brand-icon">
+        <span>Lumina</span>
+      </div>
+      <div class="header-actions">
+        <div class="streak-pill" id="streak-header-pill" title="La tua serie giornaliera">
+          <span>🔥</span>
+          <span id="header-streak-count">0</span>
+          <span style="font-size: 11px; opacity: 0.8;">gg</span>
+        </div>
+        <div class="user-pill" id="btn-user-switch" title="Cambia o crea profilo amico">
+          <span id="header-user-avatar">🦉</span>
+          <span id="header-user-name">Tu</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN VIEW CONTAINER (SPA) -->
+    <main id="view-container" role="main" aria-live="polite">
+      <!-- Le viste dinamiche (Home, Esplora, Lettore, Quiz, Ripasso, Progressi, Profilo) verranno renderizzate qui -->
+      <div style="text-align: center; padding: 48px 16px;">
+        <p style="font-size: 16px; color: var(--color-text-muted);">Accensione di Lumina in corso...</p>
+      </div>
+    </main>
+
+    <!-- BOTTOM TAB NAVIGATION -->
+    <nav class="bottom-nav" id="bottom-nav" aria-label="Navigazione principale">
+      <button class="nav-item active" data-tab="home" id="nav-btn-home">
+        <span class="nav-icon">☀️</span>
+        <span>Oggi</span>
+      </button>
+      <button class="nav-item" data-tab="explore" id="nav-btn-explore">
+        <span class="nav-icon">🧭</span>
+        <span>Esplora</span>
+      </button>
+      <button class="nav-item" data-tab="review" id="nav-btn-review">
+        <span class="nav-icon">🧠</span>
+        <span>Ripasso</span>
+      </button>
+      <button class="nav-item" data-tab="progress" id="nav-btn-progress">
+        <span class="nav-icon">📊</span>
+        <span>Mappa</span>
+      </button>
+      <button class="nav-item" data-tab="profile" id="nav-btn-profile">
+        <span class="nav-icon">👥</span>
+        <span>Amici</span>
+      </button>
+    </nav>
+
+    <!-- MODAL CONTAINER (Onboarding / Switch Profilo) -->
+    <div id="modal-container" style="display: none;"></div>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

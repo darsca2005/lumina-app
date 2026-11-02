@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#0f5c4c"/>
+  <!-- Lanterna stilizzata e fascio di luce a libro aperto -->
+  <path d="M256 80 L290 140 L222 140 Z" fill="#fcfaf6" opacity="0.9"/>
+  <rect x="200" y="140" width="112" height="24" rx="12" fill="#dfd8c8"/>
+  <path d="M216 164 L160 360 L352 360 L296 164 Z" fill="#ffffff" opacity="0.95"/>
+  <circle cx="256" cy="250" r="36" fill="#b45309"/>
+  <path d="M140 360 L372 360 L352 400 L160 400 Z" fill="#dfd8c8"/>
+  <rect x="180" y="400" width="152" height="20" rx="10" fill="#fcfaf6"/>
+</svg>
